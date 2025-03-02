@@ -16,9 +16,9 @@ func main() {
 		panic("Make sure to pass the 3 arguments: <host> <port> <path_to_permanent_storage_json>")
 	}
 
-	host := os.Args[1]
-	port, _ := strconv.Atoi(os.Args[2])
-	filename := os.Args[3]
+	host := os.Args[1]                  // i.e. localhost
+	port, _ := strconv.Atoi(os.Args[2]) // i.e. 8080
+	filename := os.Args[3]              // i.e. urls.json
 
 	redirectServer, err := newRedirectServer(host, port, filename)
 
