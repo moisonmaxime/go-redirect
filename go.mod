@@ -1,3 +1,3 @@
-module shortlink
+module go-redirect
 
 go 1.24.0

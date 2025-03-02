@@ -12,6 +12,10 @@ import (
 
 func main() {
 
+	if len(os.Args) < 4 {
+		panic("Make sure to pass the 3 arguments: <host> <port> <path_to_permanent_storage_json>")
+	}
+
 	host := os.Args[1]
 	port, _ := strconv.Atoi(os.Args[2])
 	filename := os.Args[3]
