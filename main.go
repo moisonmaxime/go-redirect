@@ -5,13 +5,18 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
 
 func main() {
 
-	redirectServer, err := newRedirectServer("localhost", 8080, "urls.json")
+	host := os.Args[1]
+	port, _ := strconv.Atoi(os.Args[2])
+	filename := os.Args[3]
+
+	redirectServer, err := newRedirectServer(host, port, filename)
 
 	if err != nil {
 		panic(err)

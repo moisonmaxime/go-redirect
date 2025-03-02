@@ -20,7 +20,7 @@ func newRedirectServer(host string, port int, filename string) (*RedirectServer,
 	mux := http.NewServeMux()
 
 	httpServer := &http.Server{
-		Addr:           fmt.Sprintf(":%v", port),
+		Addr:           fmt.Sprintf("%v:%v", host, port),
 		Handler:        mux,
 		ReadTimeout:    10 * time.Second, // Timeout for reading the request
 		WriteTimeout:   10 * time.Second, // Timeout for writing the response
@@ -45,7 +45,7 @@ func newRedirectServer(host string, port int, filename string) (*RedirectServer,
 }
 
 func (server *RedirectServer) start() {
-	log.Printf("Server started on :%v", server.port)
+	log.Printf("Server started on %v:%v", server.host, server.port)
 	if err := server.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed: %v", err)
 	}
@@ -73,18 +73,13 @@ func (server *RedirectServer) routeRequests(w http.ResponseWriter, req *http.Req
 }
 
 func (server *RedirectServer) handleRedirect(w http.ResponseWriter, req *http.Request) {
-	path := strings.TrimPrefix(req.URL.Path, "/")
+	short := strings.TrimPrefix(req.URL.Path, "/")
 
-	log.Println(path)
-
-	if len(path) > 0 {
-		short := path
-		log.Println(short)
-
+	if short != "" {
 		match := server.storage.get(short)
-		log.Println(match)
 
 		if match != "" {
+			log.Printf("Redirect /%v to %v\n", short, match)
 			w.Header().Set("Location", match)
 			w.WriteHeader(http.StatusPermanentRedirect)
 			w.Write([]byte(""))
@@ -92,6 +87,7 @@ func (server *RedirectServer) handleRedirect(w http.ResponseWriter, req *http.Re
 		}
 	}
 
+	log.Printf("Failed to find shortlink: /%v\n", short)
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("\n404: Not Found!\n"))
 }
@@ -107,6 +103,7 @@ func (server *RedirectServer) handleCreateShortLink(w http.ResponseWriter, req *
 
 	server.storage.store(shortlink, url)
 
+	log.Printf("\n%v was added under shortlink: http://%v:%v/%v\n", url, server.host, server.port, shortlink)
 	resultMessage := fmt.Sprintf("\n%v was added under shortlink: http://%v:%v/%v\n", url, server.host, server.port, shortlink)
 	w.Write([]byte(resultMessage))
 }
@@ -123,6 +120,7 @@ func (server *RedirectServer) handleDeleteShortLink(w http.ResponseWriter, req *
 
 	server.storage.remove(shortlink)
 
-	resultMessage := fmt.Sprintf("\nRemoved shortlink: %v/n", shortlink)
+	log.Printf("\nRemoved shortlink: %v\n", shortlink)
+	resultMessage := fmt.Sprintf("\nRemoved shortlink: %v\n", shortlink)
 	w.Write([]byte(resultMessage))
 }
