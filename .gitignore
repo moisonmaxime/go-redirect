@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/macos,go,git
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,go,git
+# Created by https://www.toptal.com/developers/gitignore/api/git,go,macos,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=git,go,macos,visualstudiocode
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -72,4 +72,23 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,go,git
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/git,go,macos,visualstudiocode
